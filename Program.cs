@@ -4,6 +4,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,8 +23,8 @@ builder.Services.AddOpenTelemetry()
             .AddHttpClientInstrumentation()
             .AddOtlpExporter(o =>
             {
-                o.Endpoint = new Uri("https://7ebab4f8cf494df4bdb5774a8c33d356.apm.us-central1.gcp.cloud.es.io:443");
-                o.Headers = "Authorization=Bearer HOck0wh231OOCa9MjU";
+                o.Endpoint = new Uri(configuration["OpenTelemetry:Endpoint"] ?? string.Empty);
+                o.Headers = configuration["OpenTelemetry:Header"];
             });
     })
     .WithMetrics(metricsProviderBuilder =>
@@ -34,8 +35,8 @@ builder.Services.AddOpenTelemetry()
             .AddAspNetCoreInstrumentation()
             .AddOtlpExporter(o =>
             {
-                o.Endpoint = new Uri("https://7ebab4f8cf494df4bdb5774a8c33d356.apm.us-central1.gcp.cloud.es.io:443");
-                o.Headers = "Authorization=Bearer HOck0wh231OOCa9MjU";
+                o.Endpoint = new Uri(configuration["OpenTelemetry:Endpoint"] ?? string.Empty);
+                o.Headers = configuration["OpenTelemetry:Header"];
             });
     });
 
@@ -45,8 +46,8 @@ builder.Logging.AddOpenTelemetry(loggingBuilder =>
     loggingBuilder.ParseStateValues = true;
     loggingBuilder.AddOtlpExporter(o =>
     {
-        o.Endpoint = new Uri("https://7ebab4f8cf494df4bdb5774a8c33d356.apm.us-central1.gcp.cloud.es.io:443");
-        o.Headers = "Authorization=Bearer HOck0wh231OOCa9MjU";
+        o.Endpoint = new Uri(configuration["OpenTelemetry:Endpoint"] ?? string.Empty);
+        o.Headers = configuration["OpenTelemetry:Header"];
     });
 });
 
